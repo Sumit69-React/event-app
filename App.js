@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -23,16 +23,49 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {Provider} from 'react-redux';
+import {configureStore} from './src/store';
+import {NavigationContainer} from '@react-navigation/native';
+import StackNavigator from './src/Navigator/StackNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getLoggedInUser} from './src/helper/event_helper';
 
 function App() {
-  const backgroundStyle = {
-    backgroundColor: Colors.lighter,
-  };
+  const [IsLogedin, setIsLogedin] = useState(false);
+  const [checkedSignIn, setcheckedSignIn] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const chekisSignedIn = async () => {
+        try {
+          let USER_DATA = await AsyncStorage.getItem('LOGIN_DATA');
+
+          USER_DATA = JSON.parse(USER_DATA);
+          console.log('LOGIN_DATA========', USER_DATA);
+
+          if (USER_DATA) {
+            setIsLogedin(true);
+          }
+
+          setcheckedSignIn(true);
+        } catch (error) {
+          console.log('error========', error);
+          setIsLogedin(false);
+          setcheckedSignIn(true);
+        }
+      };
+      chekisSignedIn();
+    }, 1200);
+  }, []);
+
+  getLoggedInUser();
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <Text>Hello</Text>
-    </SafeAreaView>
+    <Provider store={configureStore}>
+      <NavigationContainer>
+        {checkedSignIn == true && <StackNavigator isLogedin={IsLogedin} />}
+      </NavigationContainer>
+    </Provider>
   );
 }
 

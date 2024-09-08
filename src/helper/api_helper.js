@@ -1,6 +1,6 @@
 import axios from 'axios';
-import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../../config';
 // default
 
 axios.defaults.baseURL = config.API_URL.API_URL;
@@ -47,13 +47,6 @@ const setAuthorization = token => {
 };
 
 class APIClient {
-  /**
-   * Fetches data from given url
-   */
-
-  //  get = (url, params) => {
-  //   return axios.get(url, params);
-  // };
   get = (url, params) => {
     let response;
 
@@ -93,14 +86,5 @@ class APIClient {
     return axios.delete(url, {...config});
   };
 }
-// const getLoggedinUser = () => {
-//   // const user = localStorage.getItem("authUser");
-//   if (!user) {
-//     return null;
-//   } else {
-//     return JSON.parse(user);
-//   }
-// };
 
 export {APIClient, setAuthorization};
-// export { APIClient, setAuthorization, getLoggedinUser };
